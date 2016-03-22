@@ -197,8 +197,8 @@ def get_tablespace(module, conn, name):
     return ts
 
 
-def get_create_tablespace_sql(name, blocksize, num_datafiles, init_size, autoextend, next_size, max_size):
-    sql = 'CREATE TABLESPACE {name} DATAFILE'.format(name=name)
+def get_create_tablespace_sql(name, blocksize, num_datafiles, init_size, autoextend, next_size, max_size, data_path):
+    sql = "CREATE TABLESPACE {name} DATAFILE '{data_path}/{name}.dbf'".format(name=name, data_path=data_path)
     for i in xrange(num_datafiles):
         if i > 0:
             sql = '{sql},'.format(sql=sql)
@@ -258,6 +258,7 @@ def size_to_bytes(size, blocksize):
 def ensure(module, conn):
     name = module.params['name'].upper()
     blocksize = module.params['blocksize']
+    data_path = module.params['data_path']
     num_datafiles = module.params['num_datafiles']
     init_size = module.params['init_size']
     autoextend = module.params['autoextend']
@@ -270,7 +271,7 @@ def ensure(module, conn):
 
     if state == 'present':
         if not tbs:
-            sql.append(get_create_tablespace_sql(name=name, blocksize=blocksize, num_datafiles=num_datafiles,
+            sql.append(get_create_tablespace_sql(name=name, blocksize=blocksize, data_path=data_path, num_datafiles=num_datafiles,
                                                  init_size=init_size, autoextend=autoextend, next_size=next_size,
                                                  max_size=max_size))
         else:
@@ -302,6 +303,7 @@ def main():
     module = AnsibleModule(
         argument_spec=dict(
             name=dict(type='str', required=True),
+            data_path=dict(type='str', required=False),
             blocksize=dict(type='str', required=False, default='8k'),
             num_datafiles=dict(type='int', required=False, default=1),
             autoextend=dict(type='bool', required=False, default=False),
