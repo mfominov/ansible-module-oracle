@@ -123,6 +123,7 @@ Ensure tablespace USERS exist, can grow up to 2G in 16M steps. Tablespace will b
     autoextend: true
     next_size: 16M
     max_size: 2G
+    data_path: /home/oracle/
     oracle_host: db.example.com
     oracle_user: system
     oracle_pass: manager
@@ -143,12 +144,11 @@ Ensure tablespace TEST does not exist.
 
 ## Users
 
-__NOTE__: Password must be the hashed value from sys.user$.password.
 
 ```yaml
 - oracle_user:
     name: pinky
-    password: 225751978A87ED8E
+    password: pinky
     default_tablespace: DATA
     temporary_tablespace: TEMP
     roles:

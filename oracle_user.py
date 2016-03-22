@@ -170,8 +170,10 @@ def get_user(module, conn, name):
 
 
 def get_create_user_sql(name, userpass, default_tablespace=None, temporary_tablespace=None, account_status=None):
-    sql = "CREATE USER {name} IDENTIFIED BY VALUES '{userpass}'".format(
+    sql = "CREATE USER {name} IDENTIFIED BY {userpass}".format(
         name=name, userpass=userpass)
+#    sql = "CREATE USER {name} IDENTIFIED BY VALUES '{userpass}'".format(
+#        name=name, userpass=userpass)
     if default_tablespace:
         sql = '{sql} DEFAULT TABLESPACE {default_tablespace}'.format(
             sql=sql, default_tablespace=default_tablespace)
@@ -192,8 +194,10 @@ def get_drop_user_sql(name):
 def get_alter_user_sql(name, userpass=None, default_tablespace=None, temporary_tablespace=None, account_status=None):
     sql = 'ALTER USER {name}'.format(name=name)
     if userpass:
-        sql = "{sql} IDENTIFIED BY VALUES '{userpass}'".format(
+        sql = "{sql} IDENTIFIED BY {userpass}".format(
             sql=sql, userpass=userpass)
+#        sql = "{sql} IDENTIFIED BY VALUES '{userpass}'".format(
+#            sql=sql, userpass=userpass)
     if default_tablespace:
         sql = '{sql} DEFAULT TABLESPACE {default_tablespace}'.format(
             sql=sql, default_tablespace=default_tablespace)
